@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나의 직장 생활 유형 테스트</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #F2F0EB;
+  --surface: #FAFAF8;
+  --ink:     #1A1917;
+  --ink-2:   #4A4845;
+  --ink-3:   #8C8A87;
+  --border:  #D8D5CF;
+  --border-2:#E8E5DF;
+
+  /* 유형별 포인트 컬러 */
+  --c1: #1A1917;  /* 야근 자처러 — 블랙 */
+  --c2: #C55A11;  /* 에너지 추진러 — 번트 오렌지 */
+  --c3: #2D6A4F;  /* 조용한 저격수 — 딥 그린 */
+  --c4: #1D4E89;  /* 회의실 광대 — 딥 블루 */
+  --c5: #4A235A;  /* 엑셀 마법사 — 딥 퍼플 */
+  --c6: #922B21;  /* 팩폭 전문가 — 딥 레드 */
+  --c7: #1A5276;  /* 워라밸 수호자 — 스틸 블루 */
+  --c8: #784212;  /* 아이디어 폭발러 — 브라운 */
+
+  --accent: #1A1917;
+  --radius: 8px;
+  --radius-lg: 14px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════
+   COVER
+══════════════════════════════ */
+#cover {
+  min-height: 100vh;
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  #cover { grid-template-columns: 1fr; }
+  .cover-right { display: none; }
+}
+
+/* 왼쪽 패널 */
+.cover-left {
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 3rem 3rem 3rem;
+  border-right: 1px solid var(--border);
+  position: relative; z-index: 1;
+}
+
+.cover-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+
+.logo-mark {
+  width: 32px; height: 32px;
+  background: var(--ink); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.logo-mark svg { width: 18px; height: 18px; }
+
+.logo-text {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--ink);
+}
+
+.cover-center { padding: 2rem 0; }
+
+.cover-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--border);
+  padding: 5px 14px; border-radius: 999px;
+  margin-bottom: 2rem;
+}
+
+.cover-tag::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink); display: block;
+}
+
+.cover-h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 900; line-height: 1.08;
+  letter-spacing: -0.02em; color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+
+.cover-h1 em { font-style: italic; font-weight: 400; }
+
+.cover-desc {
+  font-size: 14px; color: var(--ink-2); line-height: 1.8;
+  font-weight: 300; max-width: 340px; margin-bottom: 2.5rem;
+}
+
+/* 이름 입력 */
+.name-field { margin-bottom: 1.5rem; }
+
+.name-field label {
+  display: block; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 8px;
+}
+
+.name-field input {
+  width: 100%; max-width: 320px;
+  padding: 13px 16px;
+  font-size: 15px; font-family: 'Noto Sans KR', sans-serif;
+  color: var(--ink); background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius); outline: none;
+  transition: border-color 0.15s;
+}
+
+.name-field input:focus { border-color: var(--ink); }
+.name-field input::placeholder { color: var(--ink-3); }
+
+.name-warn {
+  font-size: 12px; color: #922B21; margin-top: 6px;
+  opacity: 0; transition: opacity 0.2s; min-height: 18px;
+}
+.name-warn.show { opacity: 1; }
+
+/* 시작 버튼 */
+.start-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ink); color: #fff;
+  border: none; padding: 15px 32px;
+  font-size: 14px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  letter-spacing: 0.04em; border-radius: var(--radius);
+  cursor: pointer; transition: all 0.15s;
+}
+
+.start-btn:hover { background: #333; transform: translateY(-1px); }
+.start-btn:active { transform: translateY(0); }
+
+.start-btn svg { width: 16px; height: 16px; transition: transform 0.15s; }
+.start-btn:hover svg { transform: translateX(3px); }
+
+/* 메타 */
+.cover-meta {
+  font-size: 12px; color: var(--ink-3); margin-top: 1rem;
+  display: flex; align-items: center; gap: 16px;
+}
+
+.meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+
+/* 오른쪽 패널 */
+.cover-right {
+  background: var(--bg);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 3rem 2.5rem;
+  position: relative; overflow: hidden;
+}
+
+.cover-right-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--ink-3);
+  margin-bottom: 1.5rem;
+}
+
+/* 유형 카드 리스트 */
+.type-cards { display: flex; flex-direction: column; gap: 8px; }
+
+.type-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+  transition: border-color 0.15s, transform 0.15s;
+  cursor: default;
+}
+
+.type-card:hover { border-color: var(--ink); transform: translateX(3px); }
+
+.tc-num {
+  font-family: 'Unbounded', sans-serif; font-size: 10px;
+  font-weight: 700; color: var(--ink-3); min-width: 20px;
+}
+
+.tc-emoji { font-size: 1.2rem; min-width: 24px; text-align: center; }
+
+.tc-info { flex: 1; }
+
+.tc-name {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.tc-sub { font-size: 11px; color: var(--ink-3); font-weight: 300; }
+
+.tc-bar {
+  width: 40px; height: 3px; border-radius: 999px;
+  background: var(--border-2);
+}
+
+/* 배경 데코 */
+.cover-deco-num {
+  position: absolute; bottom: -20px; right: -10px;
+  font-family: 'Unbounded', sans-serif; font-size: 180px;
+  font-weight: 900; color: var(--border-2); line-height: 1;
+  pointer-events: none; user-select: none; letter-spacing: -0.05em;
+}
+
+/* ══════════════════════════════
+   QUIZ
+══════════════════════════════ */
+#quiz { display: none; min-height: 100vh; background: var(--bg); }
+
+/* 상단 헤더 */
+.qz-top {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px; position: sticky; top: 0; z-index: 50;
+}
+
+.qz-logo {
+  font-family: 'Unbounded', sans-serif; font-size: 11px;
+  font-weight: 700; color: var(--ink); letter-spacing: 0.06em;
+}
+
+.qz-progress-wrap {
+  flex: 1; max-width: 300px; margin: 0 2rem;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.qz-track {
+  flex: 1; height: 2px; background: var(--border-2); border-radius: 999px; overflow: hidden;
+}
+
+.qz-fill {
+  height: 100%; background: var(--ink);
+  border-radius: 999px; transition: width 0.4s ease; width: 0%;
+}
+
+.qz-count {
+  font-size: 11px; font-weight: 700; color: var(--ink-3);
+  white-space: nowrap; font-family: 'Unbounded', sans-serif;
+}
+
+/* 질문 카드 */
+.q-wrap {
+  max-width: 680px; margin: 0 auto;
+  padding: 4rem 1.5rem 3rem;
+}
+
+.q-slide {
+  display: none; animation: slideIn 0.3s ease both;
+}
+
+.q-slide.active { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-category {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-3);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 999px; margin-bottom: 1.5rem;
+}
+
+.q-text {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.15rem, 3.5vw, 1.6rem);
+  font-weight: 700; line-height: 1.35; color: var(--ink);
+  margin-bottom: 0.6rem; letter-spacing: -0.01em;
+}
+
+.q-sub {
+  font-size: 13px; color: var(--ink-3); font-weight: 300;
+  margin-bottom: 2.5rem; line-height: 1.6;
+}
+
+/* 버튼형 선택지 — 좌우 2열 */
+.opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 520px) {
+  .opts { grid-template-columns: 1fr; }
+}
+
+.opt-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  text-align: left; cursor: pointer;
+  transition: all 0.16s;
+  display: flex; flex-direction: column; gap: 8px;
+  position: relative; overflow: hidden;
+}
+
+.opt-btn::before {
+  content: '';
+  position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+  background: transparent; transition: background 0.16s;
+  border-radius: 0 2px 2px 0;
+}
+
+.opt-btn:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.opt-btn:hover::before { background: var(--ink); }
+
+.opt-btn.selected {
+  border-color: var(--ink);
+  background: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.opt-btn.selected::before { background: #fff; }
+.opt-btn.selected .opt-label { color: rgba(255,255,255,0.5); }
+.opt-btn.selected .opt-text { color: #fff; }
+
+.opt-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-3);
+  font-family: 'Unbounded', sans-serif;
+}
+
+.opt-text {
+  font-size: 13px; color: var(--ink-2); font-weight: 400;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════
+   RESULT
+══════════════════════════════ */
+#result { display: none; background: var(--bg); }
+
+/* 히어로 */
+.r-hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 5rem 1.5rem 4rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+
+.r-hero-num {
+  position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+  font-family: 'Unbounded', sans-serif; font-size: 280px; font-weight: 900;
+  line-height: 1; color: var(--border-2); pointer-events: none; white-space: nowrap;
+}
+
+.r-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); border: 1px solid var(--border); padding: 4px 14px; border-radius: 999px;
+  margin-bottom: 1.5rem; position: relative;
+}
+
+.r-emoji {
+  font-size: 4rem; display: block; margin-bottom: 0.75rem; position: relative;
+  animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes pop {
+  from { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.r-name {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  font-weight: 900; line-height: 1; letter-spacing: -0.02em;
+  margin-bottom: 0.5rem; position: relative;
+}
+
+.r-en {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1.5rem; position: relative;
+  font-family: 'Unbounded', sans-serif;
+}
+
+.r-desc {
+  font-size: 14px; color: var(--ink-2); font-weight: 300;
+  line-height: 1.9; max-width: 400px; margin: 0 auto; position: relative;
+}
+
+/* 섹션 공통 */
+.r-section { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+.r-section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-3);
+  margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Unbounded', sans-serif;
+}
+
+.r-divider { height: 1px; background: var(--border); max-width: 680px; margin: 0 auto; }
+
+/* 점수 바 */
+.score-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1rem; padding: 10px 0;
+  border-bottom: 1px solid var(--border-2);
+}
+.score-row:last-child { border-bottom: none; }
+
+.score-lbl-wrap { display: flex; align-items: center; gap: 8px; min-width: 150px; }
+.score-emoji { font-size: 1rem; }
+.score-lbl { font-size: 12px; font-weight: 700; color: var(--ink); }
+.score-track { flex: 1; height: 3px; background: var(--border-2); border-radius: 999px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 999px; width: 0%; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+.score-val { font-size: 11px; font-weight: 700; min-width: 32px; text-align: right; font-family: 'Unbounded', sans-serif; }
+
+/* 키워드 */
+.kw-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.kw-tag {
+  font-size: 12px; font-weight: 500; padding: 6px 16px;
+  border-radius: 999px; border: 1.5px solid;
+  background: var(--surface);
+}
+
+/* 궁합 */
+.compat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.compat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+}
+
+.compat-card-tag {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 10px; font-weight: 700;
+  font-family: 'Unbounded', sans-serif;
+}
+
+.compat-card-name {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--ink);
+}
+
+.compat-card-desc { font-size: 12px; color: var(--ink-3); font-weight: 300; line-height: 1.6; }
+
+/* 조언 */
+.advice-list { display: flex; flex-direction: column; }
+.advice-item {
+  display: flex; gap: 14px; padding: 16px 0;
+  border-bottom: 1px solid var(--border-2);
+}
+.advice-item:last-child { border-bottom: none; }
+.advice-icon { font-size: 1.1rem; min-width: 22px; }
+.advice-text { font-size: 13px; color: var(--ink-2); font-weight: 300; line-height: 1.75; }
+.advice-text strong { color: var(--ink); font-weight: 700; }
+
+/* 이런 동료 */
+.find-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.75rem;
+}
+.find-box p { font-size: 13px; color: var(--ink-2); line-height: 1.9; font-weight: 300; }
+.find-box p strong { color: var(--ink); font-weight: 700; }
+
+/* 완료 버튼 */
+.complete-wrap { text-align: center; padding: 3rem 1.5rem 5rem; }
+
+.complete-btn {
+  background: var(--ink); color: #fff;
+  border: none; padding: 14px 36px;
+  font-size: 14px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  border-radius: var(--radius); cursor: pointer;
+  transition: all 0.15s; letter-spacing: 0.03em;
+}
+.complete-btn:hover { background: #333; transform: translateY(-1px); }
+
+/* 완료 오버레이 */
+#complete-overlay {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: var(--surface);
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 2rem;
+}
+#complete-overlay.show { display: flex; }
+
+.ov-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--ink); display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.5rem; animation: pop 0.5s ease;
+}
+.ov-icon span { font-size: 2rem; }
+
+.ov-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--ink); margin-bottom: 0.75rem; letter-spacing: -0.01em;
+}
+
+.ov-desc { font-size: 14px; color: var(--ink-3); line-height: 1.9; font-weight: 300; }
+
+@media (max-width: 480px) {
+  .compat-grid { grid-template-columns: 1fr; }
+  .cover-left { padding: 2rem 1.5rem; }
+  .q-wrap { padding: 2.5rem 1.25rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ COVER ══════════════════ -->
+<section id="cover">
+
+  <!-- 왼쪽 -->
+  <div class="cover-left">
+    <div class="cover-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 18 18" fill="none">
+          <rect x="2" y="2" width="6" height="6" rx="1" fill="white"/>
+          <rect x="10" y="2" width="6" height="6" rx="1" fill="white" opacity="0.5"/>
+          <rect x="2" y="10" width="6" height="6" rx="1" fill="white" opacity="0.5"/>
+          <rect x="10" y="10" width="6" height="6" rx="1" fill="white"/>
+        </svg>
+      </div>
+      <span class="logo-text">WORK TYPE TEST</span>
+    </div>
+
+    <div class="cover-center">
+      <div class="cover-tag">2025 Edition · 20Q · 8 Types</div>
+
+      <h1 class="cover-h1">
+        회사에서<br>나는<br><em>어떤 인간</em><br>인가요?
+      </h1>
+
+      <p class="cover-desc">
+        20개의 솔직한 선택으로 밝혀지는<br>
+        나의 진짜 직장 생활 유형.<br>
+        당신의 회사 내 포지션은 무엇일까요?
+      </p>
+
+      <div class="name-field">
+        <label for="uname">이름</label>
+        <input type="text" id="uname" placeholder="이름을 입력하세요" maxlength="20" autocomplete="off">
+        <p class="name-warn" id="name-warn">이름을 입력해야 시작할 수 있어요</p>
+      </div>
+
+      <button class="start-btn" onclick="handleStart()">
+        테스트 시작하기
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="cover-meta">
+        <span>20문항</span>
+        <div class="meta-dot"></div>
+        <span>약 3분</span>
+        <div class="meta-dot"></div>
+        <span>8가지 유형</span>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--ink-3)">© 2025 Work Type Test</div>
+  </div>
+
+  <!-- 오른쪽 -->
+  <div class="cover-right">
+    <div class="cover-deco-num">8</div>
+    <p class="cover-right-title">8가지 유형 미리보기</p>
+    <div class="type-cards">
+      <div class="type-card">
+        <span class="tc-num">01</span>
+        <span class="tc-emoji">😤</span>
+        <div class="tc-info">
+          <div class="tc-name">야근 자처러</div>
+          <div class="tc-sub">아무도 안 시켰는데 혼자 남는 타입</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">02</span>
+        <span class="tc-emoji">⚡</span>
+        <div class="tc-info">
+          <div class="tc-name">에너지 폭발 추진러</div>
+          <div class="tc-sub">마감 압박이 올수록 집중력 올라감</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">03</span>
+        <span class="tc-emoji">🕵️</span>
+        <div class="tc-info">
+          <div class="tc-name">조용한 저격수</div>
+          <div class="tc-sub">말 없이 결과로 증명하는 타입</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">04</span>
+        <span class="tc-emoji">🎪</span>
+        <div class="tc-info">
+          <div class="tc-name">회의실 광대</div>
+          <div class="tc-sub">경직된 회의 분위기를 한 방에 풀음</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">05</span>
+        <span class="tc-emoji">🧙</span>
+        <div class="tc-info">
+          <div class="tc-name">엑셀 마법사</div>
+          <div class="tc-sub">큰 그림 먼저 보는 전략가</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">06</span>
+        <span class="tc-emoji">🔥</span>
+        <div class="tc-info">
+          <div class="tc-name">팩폭 전문가</div>
+          <div class="tc-sub">불편해도 해야 할 말은 하는 타입</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">07</span>
+        <span class="tc-emoji">🌿</span>
+        <div class="tc-info">
+          <div class="tc-name">워라밸 수호자</div>
+          <div class="tc-sub">팀의 허브이자 소통 전문가</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+      <div class="type-card">
+        <span class="tc-num">08</span>
+        <span class="tc-emoji">🚀</span>
+        <div class="tc-info">
+          <div class="tc-name">아이디어 폭발러</div>
+          <div class="tc-sub">기존 틀을 의심하는 혁신가</div>
+        </div>
+        <div class="tc-bar"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ QUIZ ══════════════════ -->
+<section id="quiz">
+  <div class="qz-top">
+    <span class="qz-logo">WTT</span>
+    <div class="qz-progress-wrap">
+      <div class="qz-track"><div class="qz-fill" id="qz-fill"></div></div>
+      <span class="qz-count"><span id="qz-cur">1</span>/20</span>
+    </div>
+    <div style="width:40px"></div>
+  </div>
+
+  <div class="q-wrap">
+
+    <!-- Q1 -->
+    <div class="q-slide" id="q1">
+      <div class="q-category">월요일 아침</div>
+      <div class="q-text">출근하자마자 제일 먼저 하는 행동은?</div>
+      <div class="q-sub">솔직하게 골라봐요</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(1,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">📋 오늘 할 일 + 우선순위 정리. 이게 없으면 하루가 불안함</span>
+        </button>
+        <button class="opt-btn" onclick="answer(1,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">⚡ 가장 급한 업무 바로 처리. 생각보다 행동이 먼저</span>
+        </button>
+        <button class="opt-btn" onclick="answer(1,'T7')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">☕ 커피 타면서 팀원들 안부 확인. 사람 파악이 먼저</span>
+        </button>
+        <button class="opt-btn" onclick="answer(1,'T5')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🗺️ 이번 주 전체 그림 그리기. 방향부터 잡아야 함</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-slide" id="q2">
+      <div class="q-category">회의 시간</div>
+      <div class="q-text">회의에서 나는 어떤 캐릭터인가요?</div>
+      <div class="q-sub">회의실에서 자연스럽게 나오는 내 모습</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(2,'T5')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">📊 사전 자료 준비해서 논리적으로 발표하는 사람</span>
+        </button>
+        <button class="opt-btn" onclick="answer(2,'T6')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🎯 핵심만 딱 말하고 시간 낭비 싫어하는 사람</span>
+        </button>
+        <button class="opt-btn" onclick="answer(2,'T4')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">💡 엉뚱한 아이디어 던져서 분위기 살리는 사람</span>
+        </button>
+        <button class="opt-btn" onclick="answer(2,'T3')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🤫 말은 없지만 끝나고 혼자 다 처리하는 사람</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-slide" id="q3">
+      <div class="q-category">야근 발생</div>
+      <div class="q-text">갑자기 오늘 야근이 생겼어요. 속마음은?</div>
+      <div class="q-sub">진짜 솔직하게!</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(3,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">😤 어쩔 수 없지. 빨리 끝내고 나가는 게 목표</span>
+        </button>
+        <button class="opt-btn" onclick="answer(3,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🔥 오히려 집중 잘 됨. 남들 없을 때 더 잘 돼</span>
+        </button>
+        <button class="opt-btn" onclick="answer(3,'T7')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">😔 속으로 한숨 쉬면서 억지로 남음</span>
+        </button>
+        <button class="opt-btn" onclick="answer(3,'T8')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🤔 야근 자체보다 왜 야근이 생겼는지가 더 신경 쓰임</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-slide" id="q4">
+      <div class="q-category">점심시간</div>
+      <div class="q-text">이상적인 점심시간 보내기는?</div>
+      <div class="q-sub">직장인의 숨통, 점심시간</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(4,'T7')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">👥 팀원들과 함께 나가서 왁자지껄 먹기</span>
+        </button>
+        <button class="opt-btn" onclick="answer(4,'T3')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🚶 혼자 조용히 먹고 산책. 이 시간이 진짜 힐링</span>
+        </button>
+        <button class="opt-btn" onclick="answer(4,'T8')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🎧 배달 시키고 유튜브·책. 완전한 나만의 세계</span>
+        </button>
+        <button class="opt-btn" onclick="answer(4,'T2')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">💨 빠르게 먹고 남은 시간에 업무 처리</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-slide" id="q5">
+      <div class="q-category">실수 발생</div>
+      <div class="q-text">업무에서 실수를 했어요. 나는?</div>
+      <div class="q-sub">나의 실수 처리 방식</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(5,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">😭 엄청 자책. 집에 가서도 생각남. 완벽해야 했는데</span>
+        </button>
+        <button class="opt-btn" onclick="answer(5,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🏃 수습부터. 반성은 나중에 해도 됨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(5,'T6')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">📢 솔직하게 즉시 보고. 숨기는 게 더 나쁨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(5,'T5')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🔎 왜 이런 실수가 났는지 분석 + 재발 방지 문서 작성</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-slide" id="q6">
+      <div class="q-category">새 프로젝트</div>
+      <div class="q-text">새 프로젝트 시작! 제일 먼저 하고 싶은 건?</div>
+      <div class="q-sub">프로젝트 초반 내 포지션</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(6,'T5')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🗂️ 일정·역할·목표 세팅. 틀부터 잡아야 진행이 됨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(6,'T8')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🌐 레퍼런스 수집 + 새로운 방향 제안</span>
+        </button>
+        <button class="opt-btn" onclick="answer(6,'T7')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🤝 팀원 강점 파악. 누가 뭘 잘하는지 먼저 체크</span>
+        </button>
+        <button class="opt-btn" onclick="answer(6,'T2')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🚀 일단 뭐라도 만들어보기. 해봐야 방향이 보임</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-slide" id="q7">
+      <div class="q-category">피드백 상황</div>
+      <div class="q-text">상사에게 따끔한 피드백을 받았어요.</div>
+      <div class="q-sub">내 반응은?</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(7,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">😔 집에 가서도 생각남. 완벽하지 못했다는 게 마음에 걸림</span>
+        </button>
+        <button class="opt-btn" onclick="answer(7,'T6')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🗣️ 납득되면 수용, 아니면 반박. 일방적으로는 못 받아들임</span>
+        </button>
+        <button class="opt-btn" onclick="answer(7,'T3')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🤐 알겠다 하고 조용히 개선. 결과로 보여주면 됨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(7,'T4')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">😤 속으론 상처받지만 동료에게 털어놓고 회복</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-slide" id="q8">
+      <div class="q-category">마감 압박</div>
+      <div class="q-text">마감 D-1, 진행률 70%. 나는?</div>
+      <div class="q-sub">마감 압박 상황에서 진면목 공개</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(8,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">😤 퀄리티는 못 낮춤. 밤새서라도 100% 만들고 제출</span>
+        </button>
+        <button class="opt-btn" onclick="answer(8,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">⚡ 오히려 집중력 폭발. 압박 받을수록 잘 됨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(8,'T5')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🧮 70%로 일단 제출 후 피드백 반영. 이게 더 효율적</span>
+        </button>
+        <button class="opt-btn" onclick="answer(8,'T7')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🆘 팀원에게 SOS. 혼자 끙끙대는 것보다 도움 요청이 낫지</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-slide" id="q9">
+      <div class="q-category">신입 처리</div>
+      <div class="q-text">신입이 같은 실수를 계속 반복해요. 어떻게 할까요?</div>
+      <div class="q-sub">선배로서 나의 대응 방식</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(9,'T7')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🫶 따로 불러서 친절하게 설명. 다 처음엔 그런 거니까</span>
+        </button>
+        <button class="opt-btn" onclick="answer(9,'T6')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">📌 즉시 짚어줌. 빠를수록 더 큰 실수를 막을 수 있음</span>
+        </button>
+        <button class="opt-btn" onclick="answer(9,'T1')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">📄 내가 만든 체크리스트·가이드 문서 공유</span>
+        </button>
+        <button class="opt-btn" onclick="answer(9,'T4')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🤔 왜 계속 실수하는지 먼저 대화로 이해해보기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-slide" id="q10">
+      <div class="q-category">업무 환경</div>
+      <div class="q-text">집중이 제일 잘 되는 환경은?</div>
+      <div class="q-sub">나의 최적 업무 환경</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(10,'T8')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🔇 혼자 조용히. 방해받지 않아야 진짜 일이 됨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(10,'T7')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">👥 팀원들과 함께. 옆에 사람이 있어야 힘이 남</span>
+        </button>
+        <button class="opt-btn" onclick="answer(10,'T2')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🌍 장소 불문. 어디서든 어떻게든 적응해서 함</span>
+        </button>
+        <button class="opt-btn" onclick="answer(10,'T1')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🧹 책상 정리 완료 + 모든 준비 세팅 후 시작. 환경이 곧 집중력</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="q-slide" id="q11">
+      <div class="q-category">칭찬 받을 때</div>
+      <div class="q-text">"이번에 정말 잘 했어요" 칭찬을 받았어요!</div>
+      <div class="q-sub">내 반응은?</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(11,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">😰 기쁘지만 다음엔 더 잘해야 한다는 압박도 같이 옴</span>
+        </button>
+        <button class="opt-btn" onclick="answer(11,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">💥 에너지 폭발! 다음 것도 더 잘하고 싶어짐</span>
+        </button>
+        <button class="opt-btn" onclick="answer(11,'T4')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🫂 팀원들 덕분이라고 공 돌리고 싶어짐</span>
+        </button>
+        <button class="opt-btn" onclick="answer(11,'T3')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">😶 겉으론 담담하게. 속으로는 엄청 기쁨</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="q-slide" id="q12">
+      <div class="q-category">의견 충돌</div>
+      <div class="q-text">팀원과 업무 방향이 충돌했어요. 어떻게 풀어요?</div>
+      <div class="q-sub">갈등 상황에서 나의 방식</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(12,'T6')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">📈 데이터·근거로 논리적 설득. 감정은 배제</span>
+        </button>
+        <button class="opt-btn" onclick="answer(12,'T7')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🕊️ 양쪽 다 듣고 중간점 찾는 역할 자청</span>
+        </button>
+        <button class="opt-btn" onclick="answer(12,'T4')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">💙 상대 입장 먼저 충분히 들어보고 감정부터 해소</span>
+        </button>
+        <button class="opt-btn" onclick="answer(12,'T5')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">⚖️ 양쪽 장단점 분석해서 더 나은 제3안 제시</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="q-slide" id="q13">
+      <div class="q-category">아이디어 회의</div>
+      <div class="q-text">자유롭게 아이디어 내는 회의에서 내 스타일은?</div>
+      <div class="q-sub">브레인스토밍에서 나의 포지션</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(13,'T8')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🤯 완전히 다른 각도 제안. 기존 틀 깨기 전문</span>
+        </button>
+        <button class="opt-btn" onclick="answer(13,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🌊 떠오르는 거 다 쏟아냄. 일단 꺼내놓고 걸러내면 됨</span>
+        </button>
+        <button class="opt-btn" onclick="answer(13,'T5')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🧐 충분히 생각 후 논리적으로 정리해서 딱 한 번에 제시</span>
+        </button>
+        <button class="opt-btn" onclick="answer(13,'T4')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">✨ 남의 아이디어를 더 발전시켜주는 게 내 특기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="q-slide" id="q14">
+      <div class="q-category">보고서 작성</div>
+      <div class="q-text">보고서 쓸 때 내가 가장 집착하는 것은?</div>
+      <div class="q-sub">문서 작업에서 내 포인트</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(14,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🔍 오타 하나도 없이 완벽하게. 제출 전 수십 번 검토</span>
+        </button>
+        <button class="opt-btn" onclick="answer(14,'T5')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🏗️ 목차와 논리 흐름 먼저. 구조가 탄탄해야 내용이 살아남</span>
+        </button>
+        <button class="opt-btn" onclick="answer(14,'T8')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🎨 디자인·시각화도 중요. 예뻐야 읽힘</span>
+        </button>
+        <button class="opt-btn" onclick="answer(14,'T6')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">✂️ 최대한 짧고 간결하게. 긴 보고서는 시간 낭비</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="q-slide" id="q15">
+      <div class="q-category">스트레스 해소</div>
+      <div class="q-text">업무 스트레스 해소법은?</div>
+      <div class="q-sub">퇴근 후 나의 회복 루틴</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(15,'T7')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🍺 동료와 한잔. 수다 떨면서 푸는 게 최고</span>
+        </button>
+        <button class="opt-btn" onclick="answer(15,'T3')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🛋️ 아무것도 안 하고 혼자 집에서 쉬기. 조용함이 힐링</span>
+        </button>
+        <button class="opt-btn" onclick="answer(15,'T2')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🏋️ 운동으로 발산. 몸 쓰면 다 날아감</span>
+        </button>
+        <button class="opt-btn" onclick="answer(15,'T8')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🎸 취미·창작으로 환기. 다른 것에 몰두하면 리셋 됨</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="q-slide" id="q16">
+      <div class="q-category">팀 프로젝트</div>
+      <div class="q-text">팀 프로젝트에서 자연스럽게 맡게 되는 역할은?</div>
+      <div class="q-sub">굳이 말 안 해도 이 포지션이 됨</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(16,'T5')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">📅 일정 관리 + 진행 상황 체크하는 PM 역할</span>
+        </button>
+        <button class="opt-btn" onclick="answer(16,'T7')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🔗 팀원들 연결하고 소통 조율하는 허브 역할</span>
+        </button>
+        <button class="opt-btn" onclick="answer(16,'T3')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🏆 말 없이 맡은 부분 최고 퀄리티로 해내는 실행자</span>
+        </button>
+        <button class="opt-btn" onclick="answer(16,'T8')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🎨 방향성 제시하는 크리에이티브 역할</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="q-slide" id="q17">
+      <div class="q-category">퇴근 후 연락</div>
+      <div class="q-text">퇴근 후 업무 카톡이 왔어요. 나는?</div>
+      <div class="q-sub">현대인의 영원한 딜레마</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(17,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">📱 일단 확인은 함. 안 보면 더 불안해서 못 쉼</span>
+        </button>
+        <button class="opt-btn" onclick="answer(17,'T6')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">⚖️ 급한 건 처리, 아닌 건 다음 날. 선 긋기도 일의 일부</span>
+        </button>
+        <button class="opt-btn" onclick="answer(17,'T3')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🔕 퇴근 후엔 끄고 싶음. 나만의 시간은 지켜야</span>
+        </button>
+        <button class="opt-btn" onclick="answer(17,'T2')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">😎 별로 신경 안 씀. 급하면 처리하면 됨</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="q-slide" id="q18">
+      <div class="q-category">보람을 느끼는 순간</div>
+      <div class="q-text">일하면서 진짜 보람을 느끼는 순간은?</div>
+      <div class="q-sub">"직장인 잘 하고 있구나" 싶은 그 순간</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(18,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">💎 내 결과물이 완벽에 가까울 때. 퀄리티로 증명될 때</span>
+        </button>
+        <button class="opt-btn" onclick="answer(18,'T4')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🫂 "덕분에 편했어요" 팀에 도움이 됐다는 걸 느낄 때</span>
+        </button>
+        <button class="opt-btn" onclick="answer(18,'T5')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🎯 세운 전략대로 결과가 나왔을 때. 예측이 맞았을 때</span>
+        </button>
+        <button class="opt-btn" onclick="answer(18,'T8')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🌟 "이런 아이디어는 처음 봤어요" 새로운 걸 만들었다는 인정</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="q-slide" id="q19">
+      <div class="q-category">솔직한 단점</div>
+      <div class="q-text">솔직히 나의 업무 단점은?</div>
+      <div class="q-sub">자기 객관화 타임</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(19,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">⏰ 완벽하게 하려다 시간을 너무 씀. 속도가 느림</span>
+        </button>
+        <button class="opt-btn" onclick="answer(19,'T2')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🏁 시작은 잘 하는데 마무리가 좀 허술함</span>
+        </button>
+        <button class="opt-btn" onclick="answer(19,'T6')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">😅 직접적으로 말하다가 상대 기분 상하게 할 때 있음</span>
+        </button>
+        <button class="opt-btn" onclick="answer(19,'T8')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">🌈 이상만 쫓다가 현실 가능성을 놓칠 때가 있음</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="q-slide" id="q20">
+      <div class="q-category">일의 의미</div>
+      <div class="q-text">나에게 일이란 어떤 의미인가요?</div>
+      <div class="q-sub">직장 생활의 본질</div>
+      <div class="opts">
+        <button class="opt-btn" onclick="answer(20,'T1')">
+          <span class="opt-label">A</span>
+          <span class="opt-text">🏺 장인 정신. 내 이름 붙은 일은 최고여야 함</span>
+        </button>
+        <button class="opt-btn" onclick="answer(20,'T7')">
+          <span class="opt-label">B</span>
+          <span class="opt-text">🤝 협력. 혼자보다 함께일 때 더 큰 게 나옴</span>
+        </button>
+        <button class="opt-btn" onclick="answer(20,'T5')">
+          <span class="opt-label">C</span>
+          <span class="opt-text">🎯 목표 달성. 세운 목표를 이뤄가는 게 짜릿함</span>
+        </button>
+        <button class="opt-btn" onclick="answer(20,'T8')">
+          <span class="opt-label">D</span>
+          <span class="opt-text">💡 창조. 없던 걸 만드는 것. 그게 일의 이유</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /q-wrap -->
+</section>
+
+<!-- ══════════════════ RESULT ══════════════════ -->
+<section id="result">
+  <div class="r-hero">
+    <div class="r-hero-num" id="r-hero-num"></div>
+    <div class="r-tag" id="r-tag"></div>
+    <span class="r-emoji" id="r-emoji"></span>
+    <div class="r-name" id="r-name"></div>
+    <div class="r-en" id="r-en"></div>
+    <p class="r-desc" id="r-desc"></p>
+  </div>
+
+  <div class="r-section">
+    <div class="r-section-label">업무 성향 분석</div>
+    <div id="score-bars"></div>
+  </div>
+  <div class="r-divider"></div>
+
+  <div class="r-section">
+    <div class="r-section-label">나의 업무 키워드</div>
+    <div class="kw-tags" id="kw-tags"></div>
+  </div>
+  <div class="r-divider"></div>
+
+  <div class="r-section">
+    <div class="r-section-label">동료 궁합</div>
+    <div class="compat-grid">
+      <div class="compat-card">
+        <div class="compat-card-tag">💛 찰떡 동료</div>
+        <div class="compat-card-name" id="best-name"></div>
+        <div class="compat-card-desc" id="best-desc"></div>
+      </div>
+      <div class="compat-card">
+        <div class="compat-card-tag">⚡ 의외로 잘 맞음</div>
+        <div class="compat-card-name" id="good-name"></div>
+        <div class="compat-card-desc" id="good-desc"></div>
+      </div>
+    </div>
+  </div>
+  <div class="r-divider"></div>
+
+  <div class="r-section">
+    <div class="r-section-label">이런 동료랑 잘 맞아요</div>
+    <div class="find-box"><p id="find-text"></p></div>
+  </div>
+  <div class="r-divider"></div>
+
+  <div class="r-section">
+    <div class="r-section-label">더 빛나는 직장인이 되려면</div>
+    <div class="advice-list" id="advice-list"></div>
+  </div>
+
+  <div class="complete-wrap">
+    <button class="complete-btn" onclick="completeTest()">테스트 완료하기</button>
+  </div>
+</section>
+
+<!-- 완료 오버레이 -->
+<div id="complete-overlay">
+  <div class="ov-icon"><span id="ov-emoji"></span></div>
+  <div class="ov-title" id="ov-title"></div>
+  <div class="ov-desc" id="ov-desc"></div>
+</div>
+
+<script>
+const TYPES = {
+  T1: {
+    name:'야근 자처러', en:'The Self-Imposed Overtime King', emoji:'😤', color:'#1A1917', num:'01',
+    keywords:['완벽주의','자기 검열','높은 기준','밤샘의 왕','퀄리티 집착'],
+    desc:'아무도 시키지 않았는데 본인이 제일 늦게 퇴근하는 타입. 완벽하지 않으면 제출할 수 없는 성격 탓에 스스로 야근을 자처하는 경우가 많아요. 결과물만큼은 압도적인 퀄리티를 자랑합니다.',
+    best:'팀워크 연결자', bestDesc:'내가 몰두하는 동안 팀 소통과 분위기를 알아서 챙겨줌',
+    good:'엑셀 마법사', goodDesc:'기획의 큰 틀에 내 완성도가 더해지면 최강 콤비',
+    find:'<strong>내 기준을 존중해주는 동료</strong>가 필요해요. "대충 해도 되는데 왜 그래요?" 하는 사람이랑은 일하기 힘들어요. <strong>퀄리티를 함께 추구하는 동료</strong>와 일할 때 진짜 빛납니다.',
+    advice:[
+      {icon:'⏱️',text:'<strong>80점짜리 빠른 피드백이 100점짜리 늦은 결과물보다 나을 수 있어요.</strong> 완벽한 결과보다 방향부터 맞추는 게 효율적일 때가 많아요.'},
+      {icon:'🌱',text:'<strong>실수도 일의 일부예요.</strong> 작은 실수에 너무 오래 머물지 않기.'},
+      {icon:'🫶',text:'<strong>도움 요청하는 것도 실력이에요.</strong> 혼자 다 짊어지지 않아도 됩니다.'}
+    ]
+  },
+  T2: {
+    name:'에너지 폭발 추진러', en:'The High-Energy Starter', emoji:'⚡', color:'#C55A11', num:'02',
+    keywords:['실행 먼저','추진력 폭발','압박에 강함','빠른 판단','시작의 달인'],
+    desc:'생각보다 실행이 앞서는 타입. 일단 시작해보고 수정하는 방식으로 남들보다 빠르게 치고 나가요. 마감 압박이 올수록 오히려 집중력이 올라가는 신기한 체질.',
+    best:'야근 자처러', bestDesc:'내가 빠르게 시작하면 얘가 완성도 높여줌. 속도+퀄리티 완성',
+    good:'엑셀 마법사', goodDesc:'전략 위에 내 추진력이 붙으면 실행 속도가 달라짐',
+    find:'<strong>내 페이스를 따라올 수 있는 동료</strong>가 좋아요. 너무 신중해서 한 발짝도 못 나가는 스타일과는 속 터질 수 있어요. <strong>같이 에너지 높은 동료</strong>와 일할 때 시너지가 폭발해요.',
+    advice:[
+      {icon:'🔍',text:'<strong>마무리도 챙겨봐요.</strong> 시작만큼 끝도 중요합니다.'},
+      {icon:'👂',text:'<strong>팀원의 속도도 존중해줘요.</strong> 모두가 같은 페이스일 수는 없어요.'},
+      {icon:'📋',text:'<strong>5분 계획이 1시간을 아껴요.</strong> 무조건 달리기 전에 방향 한 번만 확인.'}
+    ]
+  },
+  T3: {
+    name:'조용한 저격수', en:'The Silent Sniper', emoji:'🕵️', color:'#2D6A4F', num:'03',
+    keywords:['묵묵한 실행','결과로 말함','자기 관리','워라밸 사수','신뢰도 최고'],
+    desc:'말은 없지만 맡은 일은 반드시 해내는 타입. 회의에서 조용하다가 결과물로 "나 이런 사람이야"를 보여주는 스타일. 눈에 잘 안 띄지만 팀에 없으면 엄청 티가 납니다.',
+    best:'워라밸 수호자', bestDesc:'내가 조용히 일하는 동안 팀 소통과 분위기를 챙겨줌',
+    good:'에너지 폭발 추진러', goodDesc:'내 안정감에 상대방 추진력이 더해지면 팀이 단단해짐',
+    find:'<strong>말 없이 믿어주는 동료</strong>가 최고예요. 일일이 설명 안 해도 결과물로 판단해주는 사람. <strong>결과로 대화하는 동료</strong>와 일하면 가장 편해요.',
+    advice:[
+      {icon:'📣',text:'<strong>중간 진행 상황도 공유해줘요.</strong> 조용히 일하다 보면 팀이 불안해할 수 있어요.'},
+      {icon:'🙋',text:'<strong>도움 요청하는 것도 능력이에요.</strong> 혼자 다 해결하려다 번아웃 옵니다.'},
+      {icon:'✨',text:'<strong>내 기여를 적극적으로 알려도 괜찮아요.</strong> 결과가 좋아도 모르면 인정받기 어려워요.'}
+    ]
+  },
+  T4: {
+    name:'회의실 광대', en:'The Meeting Room Joker', emoji:'🎪', color:'#1D4E89', num:'04',
+    keywords:['분위기 제조','공감 능력','아이디어 뱅크','팀 온도 관리','감성 리더십'],
+    desc:'경직된 회의 분위기를 한 방에 풀어버리는 타입. 엉뚱한 아이디어와 따뜻한 공감으로 팀 분위기의 온도를 만드는 사람이에요. 없으면 분위기가 확 달라지는 팀의 숨은 에너지원.',
+    best:'조용한 저격수', bestDesc:'내가 분위기 만들면 조용히 실행으로 완벽하게 뒷받침해줌',
+    good:'팩폭 전문가', goodDesc:'팩트 전달할 때 내가 감성으로 포장해주면 환상 조합',
+    find:'<strong>감정을 이해하는 동료</strong>가 좋아요. 숫자와 효율만 얘기하는 건조한 분위기에서는 에너지가 떨어져요. <strong>사람을 중심에 두는 동료</strong>와 일할 때 가장 즐거워요.',
+    advice:[
+      {icon:'📊',text:'<strong>감성만큼 논리도 함께요.</strong> 감성적 제안도 데이터가 뒷받침되면 더 설득력 있어요.'},
+      {icon:'🔋',text:'<strong>내 에너지도 챙겨요.</strong> 팀 분위기 챙기다 정작 본인이 지칠 수 있어요.'},
+      {icon:'🎯',text:'<strong>결과물도 중요해요.</strong> 과정의 즐거움만큼 결과로도 증명해봐요.'}
+    ]
+  },
+  T5: {
+    name:'엑셀 마법사', en:'The Excel Wizard', emoji:'🧙', color:'#4A235A', num:'05',
+    keywords:['큰 그림','논리적 설계','목표 지향','전략가','체계의 신'],
+    desc:'전체 판을 읽고 움직이는 전략가. 지금 당장의 일보다 3개월 후, 6개월 후를 보며 일해요. 체계적인 기획력과 탄탄한 논리 구조로 팀이 방향을 잃지 않게 잡아주는 나침반 같은 존재.',
+    best:'에너지 폭발 추진러', bestDesc:'내가 전략 짜면 얘가 바로 실행. 생각과 행동의 완벽한 분업',
+    good:'야근 자처러', goodDesc:'전략의 완성도를 완벽주의자의 디테일로 마무리해주는 조합',
+    find:'<strong>큰 그림을 같이 볼 수 있는 동료</strong>가 필요해요. 당장 눈앞만 보는 사람이랑 일하면 답답함이 쌓여요. <strong>목표를 공유하고 함께 달려가는 동료</strong>와 최고의 시너지가 나요.',
+    advice:[
+      {icon:'⚡',text:'<strong>실행 속도도 중요해요.</strong> 완벽한 계획보다 빠른 실행과 수정이 더 나을 때도 있어요.'},
+      {icon:'💙',text:'<strong>팀원 감정도 전략의 일부예요.</strong> 논리만큼 사람에 대한 배려도 챙겨봐요.'},
+      {icon:'🔄',text:'<strong>계획을 바꾸는 용기도 필요해요.</strong> 상황이 바뀌면 전략도 유연하게 바뀌어야 해요.'}
+    ]
+  },
+  T6: {
+    name:'팩폭 전문가', en:'The Straight Shooter', emoji:'🔥', color:'#922B21', num:'06',
+    keywords:['직설 화법','팩트 폭탄','핵심 집중','신속 판단','불편한 진실 전달자'],
+    desc:'불편해도 해야 할 말은 하는 타입. 돌려 말하는 것 자체가 스트레스이고, 회의에서 핵심을 빠르게 짚어내는 능력이 있어요. 함께 일하면 커뮤니케이션 비용이 확 줄어드는 효율의 아이콘.',
+    best:'회의실 광대', bestDesc:'내가 팩트 말할 때 감성으로 부드럽게 포장해줌. 환상 밸런스',
+    good:'엑셀 마법사', goodDesc:'전략의 허점을 직언으로 빠르게 잡아주는 최강 감수 조합',
+    find:'<strong>솔직함을 받아줄 수 있는 동료</strong>가 필요해요. 눈치 보며 돌려 말하는 문화에서는 답답함이 폭발해요. <strong>직접적인 커뮤니케이션을 편하게 여기는 동료</strong>와 가장 잘 맞아요.',
+    advice:[
+      {icon:'🌸',text:'<strong>팩트 앞에 배려 한 스푼 추가해봐요.</strong> "걱정돼서 말하는 건데요" 한 마디가 분위기를 바꿔요.'},
+      {icon:'⏰',text:'<strong>타이밍을 잘 골라요.</strong> 맞는 말도 때를 잘못 고르면 상처가 돼요.'},
+      {icon:'👂',text:'<strong>먼저 들어주는 것도 연습해봐요.</strong> 듣고 나서 말하면 팩트가 더 정확해져요.'}
+    ]
+  },
+  T7: {
+    name:'워라밸 수호자', en:'The Team Connector', emoji:'🌿', color:'#1A5276', num:'07',
+    keywords:['팀워크 중심','조율 능력','관계 관리','소통 허브','협업 전문가'],
+    desc:'팀 안에서 모든 사람을 연결하는 허브. 누가 무엇을 잘하는지 파악하고 적재적소에 연결하는 능력이 탁월해요. 갈등이 생기면 자연스럽게 중간 역할을 맡고, 팀 분위기를 건강하게 유지시키는 존재.',
+    best:'조용한 저격수', bestDesc:'내가 연결해주면 조용히 실행해줌. 말과 행동의 완벽한 분업',
+    good:'야근 자처러', goodDesc:'내가 팀을 이어주면 완벽주의자가 최고의 결과물로 마무리해줌',
+    find:'<strong>관계를 소중히 여기는 동료</strong>가 좋아요. 일만 보고 사람을 안 보는 스타일과는 온도 차이가 느껴져요. <strong>팀을 위해 기꺼이 배려하는 사람</strong>과 가장 잘 맞아요.',
+    advice:[
+      {icon:'🔋',text:'<strong>나도 충전이 필요해요.</strong> 모두를 챙기다 정작 본인 에너지가 바닥날 수 있어요.'},
+      {icon:'💪',text:'<strong>내 의견도 강하게 말해봐요.</strong> 항상 조율만 하다 보면 내 색깔이 없어질 수 있어요.'},
+      {icon:'🎯',text:'<strong>개인 성과에도 집중해봐요.</strong> 팀워크만큼 개인 역량도 키워가야 해요.'}
+    ]
+  },
+  T8: {
+    name:'아이디어 폭발러', en:'The Idea Explosion Machine', emoji:'🚀', color:'#784212', num:'08',
+    keywords:['창의성 폭발','틀 깨기','독창적 사고','자유 추구','혁신가'],
+    desc:'기존 방식을 의심하고 새로운 길을 찾는 혁신가. 남들이 다 하는 방식엔 흥미를 못 느끼고, "다른 방법은 없을까?"를 항상 생각해요. 자율성이 높을수록 최고의 결과를 만들어내는 타입.',
+    best:'엑셀 마법사', bestDesc:'내 창의적 아이디어를 현실 가능한 전략으로 만들어줌',
+    good:'워라밸 수호자', goodDesc:'내가 아이디어 폭발하면 팀에 부드럽게 연결해줌',
+    find:'<strong>새로운 시도를 격려해주는 동료</strong>가 필요해요. "원래 이렇게 하던데요"가 제일 듣기 힘든 말이에요. <strong>새로운 것에 열린 마음을 가진 동료</strong>와 일할 때 에너지가 넘쳐요.',
+    advice:[
+      {icon:'🏗️',text:'<strong>아이디어를 현실화하는 연습을 해봐요.</strong> 창의성은 실행 가능해질 때 진짜 빛나요.'},
+      {icon:'📅',text:'<strong>마감도 창의성의 일부예요.</strong> 아무리 좋은 아이디어도 기한 안에 나와야 해요.'},
+      {icon:'🤝',text:'<strong>팀 방향과 맞추는 것도 중요해요.</strong> 독창성도 팀 안에서 빛날 때 더 가치 있어요.'}
+    ]
+  }
+};
+
+const TYPE_ORDER = ['T1','T2','T3','T4','T5','T6','T7','T8'];
+let scores = {}; TYPE_ORDER.forEach(t => scores[t] = 0);
+const TOTAL = 20;
+let curQ = 1;
+let userName = '';
+let winner = null;
+
+/* 이름 입력 → 시작 */
+function handleStart() {
+  const v = document.getElementById('uname').value.trim();
+  const w = document.getElementById('name-warn');
+  if (!v) { w.classList.add('show'); document.getElementById('uname').focus(); return; }
+  w.classList.remove('show');
+  userName = v;
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  showQ(1);
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('uname').addEventListener('keydown', e => { if (e.key === 'Enter') handleStart(); });
+});
+
+/* 질문 표시 */
+function showQ(n) {
+  document.querySelectorAll('.q-slide').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById('q' + n);
+  if (s) { s.style.animation = 'none'; s.offsetHeight; s.style.animation = ''; s.classList.add('active'); }
+  document.getElementById('qz-cur').textContent = n;
+  document.getElementById('qz-fill').style.width = ((n - 1) / TOTAL * 100) + '%';
+  window.scrollTo(0, 56);
+}
+
+/* 선택 */
+function answer(qNum, type) {
+  scores[type]++;
+  const slide = document.getElementById('q' + qNum);
+  slide.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  setTimeout(() => {
+    if (qNum < TOTAL) { curQ = qNum + 1; showQ(curQ); }
+    else showResult();
+  }, 280);
+}
+
+/* 결과 */
+function showResult() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  const sorted = TYPE_ORDER.slice().sort((a, b) => scores[b] - scores[a]);
+  winner = sorted[0];
+  const t = TYPES[winner];
+
+  /* 히어로 */
+  document.getElementById('r-hero-num').textContent = t.num;
+  const tag = document.getElementById('r-tag');
+  tag.textContent = t.num + ' — ' + t.name;
+  tag.style.borderColor = t.color + '40';
+  tag.style.color = t.color;
+
+  document.getElementById('r-emoji').textContent = t.emoji;
+  document.getElementById('r-name').textContent = t.name;
+  document.getElementById('r-name').style.color = t.color;
+  document.getElementById('r-en').textContent = t.en;
+  document.getElementById('r-desc').textContent = t.desc;
+
+  /* 점수 바 */
+  const total = TYPE_ORDER.reduce((s, k) => s + scores[k], 0);
+  const bw = document.getElementById('score-bars');
+  bw.innerHTML = '';
+  TYPE_ORDER.forEach(k => {
+    const tp = TYPES[k];
+    const pct = Math.round(scores[k] / total * 100);
+    const row = document.createElement('div');
+    row.className = 'score-row';
+    row.innerHTML = `
+      <div class="score-lbl-wrap">
+        <span class="score-emoji">${tp.emoji}</span>
+        <span class="score-lbl">${tp.name}</span>
+      </div>
+      <div class="score-track"><div class="score-fill" id="sf-${k}" style="background:${tp.color}"></div></div>
+      <div class="score-val" style="color:${tp.color}" id="sv-${k}">0%</div>`;
+    bw.appendChild(row);
+  });
+
+  setTimeout(() => {
+    TYPE_ORDER.forEach(k => {
+      const pct = Math.round(scores[k] / total * 100);
+      document.getElementById('sf-' + k).style.width = pct + '%';
+      document.getElementById('sv-' + k).textContent = pct + '%';
+    });
+  }, 300);
+
+  /* 키워드 */
+  const kw = document.getElementById('kw-tags');
+  kw.innerHTML = '';
+  t.keywords.forEach(w => {
+    const s = document.createElement('span');
+    s.className = 'kw-tag'; s.textContent = w;
+    s.style.color = t.color; s.style.borderColor = t.color + '40';
+    kw.appendChild(s);
+  });
+
+  /* 궁합 */
+  document.getElementById('best-name').textContent = t.best;
+  document.getElementById('best-name').style.color = t.color;
+  document.getElementById('best-desc').textContent = t.bestDesc;
+  document.getElementById('good-name').textContent = t.good;
+  document.getElementById('good-name').style.color = t.color;
+  document.getElementById('good-desc').textContent = t.goodDesc;
+
+  /* 이런 동료 */
+  document.getElementById('find-text').innerHTML = t.find;
+
+  /* 조언 */
+  const aw = document.getElementById('advice-list');
+  aw.innerHTML = '';
+  t.advice.forEach(a => {
+    const d = document.createElement('div');
+    d.className = 'advice-item';
+    d.innerHTML = `<div class="advice-icon">${a.icon}</div><div class="advice-text">${a.text}</div>`;
+    aw.appendChild(d);
+  });
+}
+
+/* 완료 */
+function completeTest() {
+  const t = winner ? TYPES[winner] : TYPES['T1'];
+  document.getElementById('ov-emoji').textContent = t.emoji;
+  document.getElementById('ov-title').textContent = userName + '님은 ' + t.name + '!';
+  document.getElementById('ov-title').style.color = t.color;
+  document.getElementById('ov-desc').textContent = '테스트가 완료됐어요.\n잠시 후 창이 닫힐 거예요.';
+  document.getElementById('complete-overlay').classList.add('show');
+  setTimeout(() => window.close(), 3000);
+}
+</script>
+</body>
+</html>
