@@ -531,6 +531,28 @@ body {
   .cover-left { padding: 2rem 1.5rem; }
   .q-wrap { padding: 2.5rem 1.25rem 2rem; }
 }
+
+/* 📸 캡처 카드 */
+#capture-card { position:fixed; top:0; left:-9999px; width:390px; }
+.save-result-btn {
+  background: #1A1917;
+  color: #fff;
+  border: 3px solid #1a1a1a;
+  padding: 13px 40px;
+  font-size: 16px; font-weight: 700;
+  font-family: inherit;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.18);
+  transition: transform 0.12s, box-shadow 0.12s;
+  margin-bottom: 8px;
+  display: block; margin: 0 auto 8px;
+}
+.save-result-btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.18); }
+.save-result-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.18); }
+.save-result-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+.save-hint-txt { text-align:center; font-size:13px; color:#999; min-height:18px; }
+
 </style>
 </head>
 <body>
@@ -1236,7 +1258,11 @@ body {
     <div class="advice-list" id="advice-list"></div>
   </div>
 
-  <div class="complete-wrap">
+  <!-- 캡처 카드 -->
+  <div id="capture-card"></div>
+  <div class="complete-wrap" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:2.5rem 1.5rem 5rem">
+    <button class="save-result-btn" id="save-result-btn" onclick="saveResult()">📸 결과 저장하기</button>
+    <p class="save-hint-txt" id="save-hint-txt"></p>
     <button class="complete-btn" onclick="completeTest()">테스트 완료하기</button>
   </div>
 </section>
@@ -1493,6 +1519,61 @@ function completeTest() {
   document.getElementById('ov-desc').textContent = '테스트가 완료됐어요.\n잠시 후 창이 닫힐 거예요.';
   document.getElementById('complete-overlay').classList.add('show');
   setTimeout(() => window.close(), 3000);
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+async function saveResult() {
+  const btn = document.getElementById('save-result-btn');
+  const hint = document.getElementById('save-hint-txt');
+  if (!winner) { hint.textContent = '먼저 테스트를 완료해주세요!'; return; }
+  btn.disabled = true; btn.textContent = '⏳ 저장 중...'; hint.textContent = '';
+  try {
+    const t = TYPES[winner];
+    const total = TYPE_ORDER.reduce((s,k)=>s+scores[k],0)||1;
+    const card = document.getElementById('capture-card');
+    card.style.cssText = 'position:fixed;top:0;left:-9999px;width:390px;background:#F2F0EB;padding:28px 22px 24px;font-family:Noto Sans KR,sans-serif';
+    const bars = TYPE_ORDER.map(k=>{
+      const tp=TYPES[k]; const pct=Math.round(scores[k]/total*100);
+      return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:700;color:${tp.color};min-width:110px">${tp.emoji} ${tp.name}</div>
+        <div style="flex:1;height:7px;background:#D8D5CF;border-radius:999px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${tp.color};border-radius:999px"></div></div>
+        <div style="font-size:13px;font-weight:700;color:${tp.color};min-width:30px;text-align:right">${pct}%</div></div>`;
+    }).join('');
+    const kw = (t.keywords||[]).map(w=>`<span style="display:inline-block;font-size:13px;font-weight:500;padding:4px 12px;border-radius:999px;border:1.5px solid ${t.color};color:${t.color};background:${t.light||'#f5f5f5'};margin:3px">${w}</span>`).join('');
+    const adv = (t.advice||[]).slice(0,3).map(a=>`<div style="display:flex;gap:8px;margin-bottom:8px"><div style="min-width:18px">${a.icon||a.i||'✨'}</div><div style="font-size:13px;color:#5C5448;line-height:1.7">${(a.text||a.t||'').replace(/<[^>]*>/g,'')}</div></div>`).join('');
+    card.innerHTML = `
+      <div style="text-align:center;padding-bottom:16px;border-bottom:1px solid #D4CEC4;margin-bottom:16px">
+        <div style="font-size:13px;color:#9C9488;margin-bottom:6px;letter-spacing:0.1em">직장 생활 유형 테스트 결과</div>
+        <div style="font-size:50px;margin-bottom:8px">${t.emoji}</div>
+        <div style="font-size:13px;font-weight:700;padding:4px 14px;border-radius:999px;display:inline-block;border:1.5px solid ${t.color};color:${t.color};background:${t.light||'#f5f5f5'};margin-bottom:10px">${t.num||''} — ${t.name}</div>
+        <div style="font-size:24px;font-weight:700;color:${t.color};margin-bottom:6px">${t.name}</div>
+        <div style="font-size:13px;color:#9C9488;margin-bottom:10px">${t.en}</div>
+        <div style="font-size:14px;color:#5C5448;line-height:1.8">${t.desc}</div>
+      </div>
+      <div style="margin-bottom:14px"><div style="font-size:14px;font-weight:700;color:#1A1917;margin-bottom:8px">🏷️ 업무 키워드</div><div style="display:flex;flex-wrap:wrap">${kw}</div></div>
+      <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #D4CEC4"><div style="font-size:14px;font-weight:700;color:#1A1917;margin-bottom:10px">📊 업무 성향 분석</div>${bars}</div>
+      <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #D4CEC4">
+        <div style="font-size:14px;font-weight:700;color:#1A1917;margin-bottom:8px">💞 동료 궁합</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:#fff;border:1px solid #D4CEC4;border-radius:12px;padding:10px">
+            <div style="font-size:13px;color:#9C9488;margin-bottom:4px;font-weight:700">💛 찰떡 동료</div>
+            <div style="font-size:14px;font-weight:700;color:${t.color};margin-bottom:3px">${t.best}</div>
+            <div style="font-size:13px;color:#9C9488;line-height:1.5">${t.bestDesc||t.bestD||''}</div></div>
+          <div style="background:#fff;border:1px solid #D4CEC4;border-radius:12px;padding:10px">
+            <div style="font-size:13px;color:#9C9488;margin-bottom:4px;font-weight:700">⚡ 잘 맞음</div>
+            <div style="font-size:14px;font-weight:700;color:${t.color};margin-bottom:3px">${t.good}</div>
+            <div style="font-size:13px;color:#9C9488;line-height:1.5">${t.goodDesc||t.goodD||''}</div></div></div></div>
+      <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #D4CEC4"><div style="font-size:14px;font-weight:700;color:#1A1917;margin-bottom:8px">💌 조언</div>${adv}</div>
+      <div style="text-align:center;font-size:13px;color:#B0A090;margin-top:8px">${userName}님의 직장 생활 유형 테스트 결과</div>`;
+    const canvas = await html2canvas(card,{backgroundColor:'#F2F0EB',scale:2,useCORS:true,logging:false,width:390,windowWidth:390});
+    const link = document.createElement('a');
+    link.download = `직장유형테스트_${userName}_${t.name}.png`;
+    link.href = canvas.toDataURL('image/png'); link.click();
+    btn.disabled=false; btn.textContent='✅ 저장 완료!'; hint.textContent='이미지가 저장됐어요 📸';
+    setTimeout(()=>{btn.textContent='📸 결과 저장하기';hint.textContent='';},2500);
+  } catch(e) { console.error(e); btn.disabled=false; btn.textContent='📸 결과 저장하기'; hint.textContent='저장 실패. 다시 시도해주세요 🥺'; }
 }
 </script>
 </body>
